@@ -4,7 +4,7 @@
 create table if not exists genre (
 id serial primary key,
 name varchar(40) not null
-);
+ );
 
 create table if not exists performers(
 id serial primary key,
