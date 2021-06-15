@@ -15,7 +15,7 @@ list_name_performers = ['Enrique Iglesias','Linkin Park','Arash','Eminem','50 ce
 list_genre = ['Jazz',' Rock', 'Pop', 'Folk', 'Rap']
 
 # create data table album
-list_name_album = ['Meteora','Greatest Hits','Greatest Hits','Planet Jarre','The Dark Side of the Moon','Power Up','Everyday Life','McMxc A.D']
+list_name_album = ['Meteora','Greatest Hits','Greatest Hits 2','Planet Jarre','The Dark Side of the Moon','Power Up','Everyday Life','McMxc A.D']
 list_years_of_issue_album = [2018, 2019, 2020, 2021, 2017, 2018, 2020, 2019 ]
 
 album_zip = zip(list_name_album,list_years_of_issue_album)

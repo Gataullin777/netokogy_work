@@ -2,7 +2,7 @@ import sqlalchemy
 from pprint import pprint
 
 
-#db =
+db = 'postgresql://radif:1111@localhost:5432/test_db'
 
 engine = sqlalchemy.create_engine(db)
 
@@ -45,3 +45,13 @@ connection = engine.connect()
 # WHERE name ILIKE '%%my%%' ;''').fetchall()
 #
 # print(result)
+
+
+# Продолжение ДЗ
+
+# table = connection.execute(''' SELECT * FROM track;''')
+# pprint(list(table))
+
+
+# table = connection.execute(''' SELECT duration FROM track;''')
+# pprint(list(table))
