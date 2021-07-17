@@ -2,7 +2,7 @@ import sqlalchemy
 from pprint import pprint
 
 
-db = 'postgresql://radif:1111@localhost:5432/test_db'
+db = ''
 engine = sqlalchemy.create_engine(db)
 con = engine.connect()
 
@@ -79,33 +79,34 @@ con = engine.connect()
 # data = list(data)
 # pprint(data)
 
-###### ЗАДАНИЕ 8
+##### ЗАДАНИЕ 8
 
 # data = con.execute('''SELECT p.name_or_pseudonym ,MIN(t.duration) FROM track t
 #                         LEFT JOIN album a ON t.id_album = a.id
 #                         LEFT JOIN album_and_performers ap ON a.id = ap.id_album
 #                         LEFT JOIN performers p ON ap.id_performers = p.id
-#                         GROUP BY p.name_or_pseudonym
-#                         ORDER BY MIN(t.duration)
-#                         LIMIT 1 ;''')
+#                         WHERE duration IN (SELECT MIN(duration) FROM track)
+#                                             GROUP BY p.name_or_pseudonym
+#                                             ORDER BY MIN(t.duration);''')
 # data = list(data)
 # pprint(data)
-# print('-------------------------------------------')
+
 
 ###### ЗАДАНИЕ 9
 
-# data = con.execute('''SELECT a.name, COUNT(t.id) FROM album a
+# data = con.execute('''SELECT a.name, COUNT(*) FROM album a
 #                     LEFT JOIN track t ON  a.id = t.id_album
 #                     GROUP BY a.name
-#                     ORDER BY COUNT(t.id)
-#                     LIMIT 5
+#                     HAVING COUNT(t.id) IN (SELECT COUNT(t.id) FROM track t
+#                                             GROUP BY t.id_album
+#                                             ORDER BY COUNT(t.id)
+#                                             LIMIT 1)
 #                     ;''')
+#
 #
 # data = list(data)
 # pprint(data)
-# print('-------------------------------------------')
 #
-
 
 
 
