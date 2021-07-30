@@ -1,6 +1,5 @@
 from pprint import pprint
 import re
-# читаем адресную книгу в формате CSV в список contacts_list
 import csv
 
 name_file = 'phonebook_raw.csv'
@@ -175,10 +174,3 @@ if __name__=='__main__':
 
 
 
-
-# # TODO 2: сохраните получившиеся данные в другой файл
-# # код для записи файла в формате CSV
-# with open("phonebook.csv", "w") as f:
-#   datawriter = csv.writer(f, delimiter=',')
-#   # Вместо contacts_list подставьте свой список
-#   datawriter.writerows(contacts_list)
