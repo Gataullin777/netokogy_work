@@ -1,3 +1,4 @@
+
 import re
 def search(word, text):
     pattern_1 = rf'{word.capitalize()}'

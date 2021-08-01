@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import sort
 
+
 url = 'https://habr.com/ru/all/'
 KEYWORDS = ['дизайн', 'фото', 'web', 'python']
 HOST = 'https://habr.com'
