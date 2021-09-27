@@ -5,9 +5,7 @@ from pprint import pprint
 import database as db_vk
 
 
-token_group = '1b5021e6d18ac8993a692749443ef83e1371f849b652fe5cab0dd5a3298cd649bf41ef3ce1f296559615b'
-id_group = 206818303
-token_user = '8a8d4d2e656257c1c60467984487ee444e58c1ad7f561578ef64e0ab271f65b7d00990cca85e8e07971a5'
+
 
 class Vkinder_bot():
 

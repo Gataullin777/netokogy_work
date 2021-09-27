@@ -1,7 +1,7 @@
 import sqlalchemy
 
 
-db = 'postgresql://radif:1111@localhost:5432/vkbase'
+db = 
 engine = sqlalchemy.create_engine(db)
 con = engine.connect()
 
