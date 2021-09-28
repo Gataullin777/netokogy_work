@@ -1,7 +1,7 @@
 import sqlalchemy
 
 
-db = 
+db = "sefe"
 engine = sqlalchemy.create_engine(db)
 con = engine.connect()
 
@@ -10,18 +10,8 @@ con = engine.connect()
 #                     id integer primary key);
 #                     ''')
 
-class Iter_id:
-    def __init__(self):
-        self.list_of_corteges = None
 
-    def __iter__(self):
-
-        return self
-
-    def __next__(self):
-        pass
-
-    def pull_id(self):
+def pull_id(self):
         ser_id_list = con.execute(f'''SELECT id FROM vk_user_info''')
         # print(list(user_id_list)[0][0])
         user_id_list = list(user_id_list)  # list of corteges
