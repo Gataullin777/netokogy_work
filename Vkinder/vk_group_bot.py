@@ -4,9 +4,7 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from pprint import pprint
 import database as db_vk
 
-token_group = ''
-id_group = ''
-token_user = ''
+
 
 class Vkinder_bot():
 
