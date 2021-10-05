@@ -4,9 +4,13 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from pprint import pprint
 import database as db_vk
 
+class vk_user:
+    pass
 
+class vk_group:
+    pass
 
-class Vkinder_bot():
+class Vkinder_bot:
 
     def __init__(self, token_group, id_group, token_user):
         self.token_user = token_user
@@ -28,19 +32,19 @@ class Vkinder_bot():
         print(response)
         return response
 
-    def setting_data(self, id_first_user, user_id):
+    def setting_data(self, id_search_user, current_user_id):
         '''
         :param id_first_user:  id пользователя, кому хотим найти пару
-        :param user_id: id текущего пользователя
+        :param current_user_id: id текущего пользователя
         :return: Словарь с данными пользователя кому хотим найти пару
         '''
         data_user_dict = {}
-        info_first_user = self.get_info_users(id_first_user)[0]  # dictionary
+        info_search_user = self.get_info_users(id_search_user)[0]  # dictionary
 
-        data_user_dict['name'] = info_first_user['first_name']
+        data_user_dict['name'] = info_search_user['first_name']
 
-        if info_first_user.get('sex') == None:
-            self.send_message(user_id, '''Какого пола вы ищете человека? \n '
+        if info_search_user.get('sex') == None:
+            self.send_message(current_user_id, '''Какого пола вы ищете человека? \n '
                                             'если это мужщина введите - 2 \n '
                                             'если это женщина введите - 1''')
             message_text = self.longpooling()['message']['text']
@@ -48,56 +52,40 @@ class Vkinder_bot():
                 sex = int(message_text)
                 data_user_dict['sex'] = sex
             except:
-                self.send_message(user_id, 'Ошибка при определении пола, начните заново!!!')
+                self.send_message(current_user_id, 'Ошибка при определении пола, начните заново!!!')
         else:
-            data_user_dict['sex'] = info_first_user.get('sex')
+            data_user_dict['sex'] = info_search_user.get('sex')
 
-        if info_first_user.get('relation') == None or info_first_user.get('relation') == 0:
-            self.send_message(user_id, '''Укажите семейное положение. Возможные значения:\n 
-                                            1 — не женат (не замужем);\n
-                                            2 — встречается;\n
-                                            3 — помолвлен(-а);\n
-                                            4 — женат (замужем);\n
-                                            5 — всё сложно;\n
-                                            6 — в активном поиске;\n
-                                            7 — влюблен(-а);\n
-                                            8 — в гражданском браке.''')
-            message_text = self.longpooling()['message']['text']
-            try:
-                relation = int(message_text)
-                data_user_dict['relation'] = relation
-            except:
-                self.send_message(user_id, 'Ошибка при определении семейного положения, начните заново!!!')
-        else:
-            data_user_dict['relation'] = info_first_user.get('relation')
 
-        if info_first_user.get('city') == None or info_first_user['city']['title'] == None:
-            self.send_message(user_id, '''Я не смог определить в каком городе живет пользователь, введите название города.''')
+
+        if info_search_user.get('city') == None or info_search_user['city']['title'] == None:
+            self.send_message(current_user_id, '''Я не смог определить в каком городе живет пользователь, введите название города.''')
             message_text = self.longpooling()['message']['text']
             try:
                 city_name = message_text
-                id_city = self.id_city(city_name)
+                id_city = self.get_id_city(city_name)
                 data_user_dict['city'] = id_city
             except:
-                self.send_message(user_id, 'Ошибка при определении города, начните заново!!!')
+                self.send_message(current_user_id, 'Ошибка при определении города, начните заново!!!')
         else:
-            data_user_dict['city'] = info_first_user['city']['id']
+            data_user_dict['city'] = info_search_user['city']['id']
 
-        if info_first_user.get('bdate') == None or len(info_first_user.get('bdate')) < 6:
-            self.send_message(user_id,
+        if info_search_user.get('bdate') == None or len(info_search_user.get('bdate')) < 6:
+            self.send_message(current_user_id,
                               '''Я не смог определить в возраст пользователя, введите пожалуйста его возраст.''')
             message_text = self.longpooling()['message']['text']
             try:
                 age = message_text
                 data_user_dict['age'] = int(age)
             except:
-                self.send_message(user_id, 'Ошибка при определении возраста пользователя, начните заново!!!')
+                self.send_message(current_user_id, 'Ошибка при определении возраста пользователя, начните заново!!!')
         else:
-            year_brith_user = info_first_user['bdate'].split('.')[-1]
+            year_brith_user = info_search_user['bdate'].split('.')[-1]
             year_brith_user = int(year_brith_user)
             age_user = 2021 - year_brith_user
             data_user_dict['age'] = age_user
 
+        data_user_dict['relation'] = 6
         print(data_user_dict) # словарь наполняется правильно, можно приступать к след. шагу
 
         return data_user_dict
@@ -109,21 +97,23 @@ class Vkinder_bot():
         try:
             id_first_user = int(message_text)  # если пользователь введет слово или дробное число, отправиться сообщение
             # об ошибке
-            if id_first_user:
-                self.send_message(user_id, 'Запускаю программу сбора данных')
-                data_user_dict = self.setting_data(id_first_user, user_id)
-                data_searched_user = self.user_search(data_user_dict)
-                id_searched_user = data_searched_user['id']
-                links_photo_list = self.get_links_photo(id_searched_user)
-                self.send_message(user_id, f'Для пользователя {data_user_dict["name"]}\n'
+
+            self.send_message(user_id, 'Запускаю программу сбора данных')
+            data_user_dict = self.setting_data(id_first_user, user_id)
+            data_searched_user = self.user_search(data_user_dict)
+            id_searched_user = data_searched_user['id']
+            links_photo_list = self.get_links_photo(id_searched_user)
+            self.send_message(user_id, f'Для пользователя {data_user_dict["name"]}\n'
                                 f'я нашел пару: {data_searched_user["first_name"]} {data_searched_user["last_name"]}\n'
-                                           f'Вот ссылки на полулярные фото:\n'
-                                           f'{links_photo_list[0]}\n'
-                                           f'{links_photo_list[1]}\n'
-                                           f'{links_photo_list[2]}\n'
-                                  f' id страницы vk.com/id{id_searched_user}')
-            else:
-                self.send_message(user_id, 'что то пошло не так!!! начните заново')
+                                f' id страницы vk.com/id{id_searched_user}')
+
+            # send message link photos, maximum 3
+            for i in links_photo_list:
+                self.send_message(user_id, i)
+
+            # add searced user id of the database
+            db_vk.add_data_of_the_table(id_searched_user)
+
         except Exception as e:
             print(e)
             self.send_message(user_id, 'ошибка, что то пошло не так!!! начните заново')
@@ -143,20 +133,33 @@ class Vkinder_bot():
             'users.search',
             {
                 'q': None,
-                'count': 1,
-                'fields': 'id',
+                'count': 1000,
+                'fields': 'id, is_closed' ,
                 'sex': sex,
                 'age_from': data_user_dict['age'] - 4,
                 'age_to': data_user_dict['age'] + 4,
                 'city': data_user_dict['city'],
                 'status': 6,
-                'v': 5.131
+                'v': 5.131,
+                'is_closed': False
             }
         )
 
-        pprint(users)
-        print(users['items'][0]['id'])
-        return users['items'][0]
+        # checking searced user in the database
+        list_id_from_database = db_vk.pull_id()
+
+        for i in users['items']:
+            if i['id'] in list_id_from_database or i['is_closed'] is True:
+                continue
+
+            else:
+                return i
+
+
+        # pprint(users)
+        # print(users['items'][0]['id'])
+
+        # return users['items'][0]
 
     def get_links_photo(self, user_id):
         '''
@@ -209,7 +212,7 @@ class Vkinder_bot():
         print(links_top_3_photo_list)
         return links_top_3_photo_list
 
-    def id_city(self, city_name):
+    def get_id_city(self, city_name):
         vk = vk_api.VkApi(token=self.token_user)
 
         countries_id = vk.method('database.getCountries',
@@ -250,22 +253,14 @@ class Vkinder_bot():
             mess = event_obj['message']['text']  # преобразуем текст сообщения в переменную
             current_user_id = event_obj['message']['peer_id']
 
-            if mess.lower() == "привет":  # если текст сообщения = Привет!, отправляем сообщение.
-                self.send_message(current_user_id, "Приветствую вас, меня зовут Сэм, я ваш личный помощник,\n"
-                           "я могу найти вторую половику человеку по его id,\n"
-                           "для этого напишите мне команду : 'Найти половину'" )
+            if mess.lower() == "привет":
+                self.send_message(current_user_id, "Приветствую вас в приложении для поиска второй половинки,\n"
+                           "я могу найти вторую половинку человеку по его id вконтакте,\n"
+                           "для этого напишите мне команду : 'Найти половинку'" )
 
 
-            elif mess.lower() == 'найти половину':
+            elif mess.lower() == 'найти половинку':
                 self.finding_a_half(current_user_id)
-
-
-            elif mess.lower() == 'расскажи про меня':
-                user_info_list = self.get_info_users(current_user_id)
-                message = f' Вас зовут {user_info_list[0]["first_name"]}\n' \
-                          f'Ваша фамиия {user_info_list[0]["last_name"]}'
-
-                self.send_message(current_user_id, message)
 
             else:
                 self.send_message(current_user_id, 'Я не могу понять что вы хотите!')

@@ -11,24 +11,30 @@ con = engine.connect()
 #                     ''')
 #
 
-def pull_id(self):
-        ser_id_list = con.execute(f'''SELECT id FROM vk_user_info''')
-        # print(list(user_id_list)[0][0])
-        user_id_list = list(user_id_list)  # list of corteges
+def pull_id():
+    '''
+    take all id from the database and create a list
+    :return: sorted list id
+    '''
 
+    user_id_list = con.execute(f'''SELECT id FROM vk_user_info''')
+    user_id_list = list(user_id_list)  # list of corteges
+    list_id = []
+    for i in user_id_list:
+        print(i)
+        list_id.append(i[0])
+
+    list_id.sort()
+    print(list_id)
+    return list_id
 
 def add_data_of_the_table(user_id):
+    '''
+    add user id of the table vk_user_info in the database
+    :param user_id: int
+    :return: None
+    '''
     con.execute(f'''INSERT INTO vk_user_info(id)
                     VALUES({user_id});''')
 
-def check_user(user_id):
-    user_id_list = con.execute(f'''SELECT id FROM vk_user_info''')
-    # print(list(user_id_list)[0][0])
-    user_id_list = list(user_id_list)  # list of corteges
-    # for i in elements:
-    #     print(i[0])
-
-#add_data_of_the_table(182527980)
-
-# check_user(353481)
 
