@@ -1,0 +1,2 @@
+vk-api==11.9.4
+sqlalchemy==1.4.25
