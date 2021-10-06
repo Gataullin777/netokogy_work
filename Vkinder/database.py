@@ -17,15 +17,15 @@ def pull_id():
     :return: sorted list id
     '''
 
-    user_id_list = con.execute(f'''SELECT id FROM vk_user_info''')
-    user_id_list = list(user_id_list)  # list of corteges
+    users_id_list = con.execute(f'''SELECT id FROM vk_user_info''')
+    users_id_list = list(users_id_list)  # list of corteges
     list_id = []
-    for i in user_id_list:
-        print(i)
+    for i in users_id_list:
+        # print(i)
         list_id.append(i[0])
 
     list_id.sort()
-    print(list_id)
+    # print(list_ids)
     return list_id
 
 def add_data_of_the_table(user_id):

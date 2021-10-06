@@ -1,7 +1,6 @@
-from vk_bot import Vkinder_bot
-from access import token_group, id_group, token_user
+from vk_bot import Vkinder
 
 
 if __name__=='__main__':
-    Vkinder = Vkinder_bot(token_group, id_group, token_user)
+    Vkinder = Vkinder()
     Vkinder.start()
